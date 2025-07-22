@@ -1,15 +1,5 @@
 return {
   {
-    'folke/tokyonight.nvim',
-    lazy = true,
-    opts = { style = 'moon' }
-  },
-  {
-    'scottmckendry/cyberdream.nvim',
-    lazy = true,
-    priotiry = 1000
-  },
-  {
     "catppuccin/nvim",
     name = "catppuccin",
     riority = 1000,
@@ -17,7 +7,11 @@ return {
       require('catppuccin').setup {
 	transparent_background = false,
 	integrations = {
-	  dashboard = true
+	  dashboard = true,		  -- Highlight for dashboard.nvim
+	  snacks = {			  -- Snacks scope indent 
+	    enabled = true,
+	    indent_scope_color = 'flamingo',
+	  }
 	}
       }
       -- Load the theme

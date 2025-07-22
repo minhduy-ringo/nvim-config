@@ -5,9 +5,7 @@
 
 -- Make line numbers default
 vim.o.number = true
--- You can also add relative line numbers, to help with jumping.
---  Experiment for yourself to see if you like it!
--- vim.o.relativenumber = true
+vim.o.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
@@ -25,6 +23,8 @@ end)
 
 -- Enable break indent
 vim.o.breakindent = true
+-- Break at word
+vim.o.linebreak = true
 
 -- Save undo history
 vim.o.undofile = true
