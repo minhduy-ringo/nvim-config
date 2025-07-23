@@ -48,9 +48,9 @@ return {
       require('lualine').setup {
 	options = {
 	  theme = 'catppuccin',
-	  hide = {
-	    statusline = false,
-	  },
+	},
+	sections = {
+	  lualine_x = { 'vim.fn.getcwd()', 'filetype' }
 	}
       }
     end,
