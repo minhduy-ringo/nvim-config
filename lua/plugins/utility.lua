@@ -90,11 +90,12 @@ return {
       -- Document existing key chains
       spec = {
         { '<leader>b', group = 'Buffer', icon = '' },
-	{ '<leader>g', group = 'Git', icon = ''},
+	{ '<leader>e', group = 'Explore', icon = ' '},
+	{ '<leader>g', group = 'Git', icon = '' },
         { '<leader>s', group = 'Search', icon = '' },
         { '<leader>f', group = 'Find', icon = '' },
 	{ '<leader>q', group = 'Session', icon = '' },
-	{ '<leader>u', group = 'UI', icon = ''},
+	{ '<leader>u', group = 'UI', icon = '' },
       },
     },
   },
