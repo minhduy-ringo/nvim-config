@@ -16,28 +16,6 @@ return {
     end
   },
 
-  -- Dashboard
-  -- Provide a dashboard page when start Neovim
-	--  {
-	--    'nvimdev/dashboard-nvim',
-	--    event = 'VimEnter',
-	--    dependencies = 'nvim-tree/nvim-web-devicons',
-	--    config = function()
-	--      require('dashboard').setup {
-	-- -- TODO: Custom my own dashboard
-	-- theme = 'hyper',
-	-- config = {
-	--   week_header = {
-	--     enable = true
-	--   },
-	--   shortcut = {
-	--     { desc = '󰊳 Update', group = '@property', action = 'Lazy update', key = 'u' },
-	--   },
-	-- },
-	--      }
-	--    end,
-	--  },
-
   -- Lua line
   -- Vim status line writen in Lua
   {
