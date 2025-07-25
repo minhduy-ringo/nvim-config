@@ -1,3 +1,6 @@
+-- Bootstrap lazy
+require("config.lazy")
+
 -- Load options
 require('config.options')
 
@@ -6,6 +9,3 @@ require('config.keymaps')
 
 -- Load autocmds
 require('config.autocmds')
-
--- Bootstrap lazy
-require("config.lazy")
