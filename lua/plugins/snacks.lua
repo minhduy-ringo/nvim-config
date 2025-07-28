@@ -51,9 +51,7 @@ return {
     { "<leader>fr", function() Snacks.picker.recent() end, desc = "Recent" },
     -- Git
     { "<leader>gg", function() Snacks.lazygit() end, desc = "LazyGit" },
-    { "<leader>gl", function() Snacks.picker.git_log() end, desc = "Git Log" },
     { "<leader>gB", function() Snacks.gitbrowse() end, desc = "Git Browse", mode = { "n", "v" } },
-    { "<leader>gS", function() Snacks.picker.git_stash() end, desc = "Git Stash" },
     { "<leader>gd", function() Snacks.picker.git_diff() end, desc = "Git Diff (Hunks)" },
     -- Grep
     { "<leader>sb", function() Snacks.picker.lines() end, desc = "Buffer Lines" },

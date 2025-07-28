@@ -29,7 +29,7 @@ return {
       require('mini.sessions').setup()
     end,
     keys = {
-      { '<leader>qw', function() 
+      { '<leader>Sw', function() 
 	vim.ui.input(
 	  {
 	    prompt = "Session name"
@@ -40,8 +40,8 @@ return {
 	)
 	end, desc = 'Write session' 
       },
-      { '<leader>qs', function() MiniSessions.select() end, desc = 'Select sessios' },
-      { '<leader>qd', function() MiniSessions.select('delete') end, desc = 'Delete session' },
+      { '<leader>Ss', function() MiniSessions.select() end, desc = 'Select sessios' },
+      { '<leader>Sd', function() MiniSessions.select('delete') end, desc = 'Delete session' },
     },
   },
 
@@ -93,9 +93,11 @@ return {
 	{ '<leader>e', group = 'Explore', icon = ' '},
 	{ '<leader>g', group = 'Git', icon = '' },
         { '<leader>s', group = 'Search', icon = '' },
+	{ '<leader>S', group = 'Session', icon = '' },
         { '<leader>f', group = 'Find', icon = '' },
-	{ '<leader>q', group = 'Session', icon = '' },
 	{ '<leader>u', group = 'UI', icon = '' },
+	{ '<leader>w', group = 'Window', icon = '' },
+	{ 'z', group = 'Fold/etc.', icon = '' },
       },
     },
   },
@@ -124,11 +126,11 @@ return {
       'TmuxNavigateProcessList',
     },
     keys = {
-      { "<c-h>", "<cmd><C-U>TmuxNavigateLeft<cr>" },
-      { "<c-j>", "<cmd><C-U>TmuxNavigateDown<cr>" },
-      { "<c-k>", "<cmd><C-U>TmuxNavigateUp<cr>" },
-      { "<c-l>", "<cmd><C-U>TmuxNavigateRight<cr>" },
-      { "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" }
+      { "<c-h>", "<cmd>TmuxNavigateLeft<cr>" },
+      { "<c-j>", "<cmd>TmuxNavigateDown<cr>" },
+      { "<c-k>", "<cmd>TmuxNavigateUp<cr>" },
+      { "<c-l>", "<cmd>TmuxNavigateRight<cr>" },
+      { "<c-\\>", "<cmd>TmuxNavigatePrevious<cr>" }
     }
   },
 }
