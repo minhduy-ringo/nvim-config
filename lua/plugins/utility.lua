@@ -29,7 +29,7 @@ return {
       require('mini.sessions').setup()
     end,
     keys = {
-      { '<leader>Sw', function() 
+      { '<leader>Sw', function()
 	vim.ui.input(
 	  {
 	    prompt = "Session name"
@@ -38,7 +38,7 @@ return {
 	    if input then MiniSessions.write(input) end
 	  end
 	)
-	end, desc = 'Write session' 
+	end, desc = 'Write session'
       },
       { '<leader>Ss', function() MiniSessions.select() end, desc = 'Select sessios' },
       { '<leader>Sd', function() MiniSessions.select('delete') end, desc = 'Delete session' },
@@ -117,6 +117,7 @@ return {
 
   { -- Navigate between Vim and Tmux
     'christoomey/vim-tmux-navigator',
+    lazy = false,
     cmd = {
       'TmuxNavigateLeft',
       'TmuxNavigateDown',

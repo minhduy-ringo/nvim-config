@@ -19,10 +19,10 @@ map('<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- Keybinds to make split navigation easier.
 --  See `:help wincmd` for a list of all window commands
-map('<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
-map('<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-map('<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-map('<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+-- map('<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
+-- map('<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
+-- map('<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
+-- map('<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 map('<S-h>', '<cmd>bprevious<CR>', { desc = 'Move to previous buffer' })
 map('<S-l>', '<cmd>bnext<CR>', { desc = 'Move to next buffer' })
 
