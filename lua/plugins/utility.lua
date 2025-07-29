@@ -92,6 +92,7 @@ return {
         { '<leader>b', group = 'Buffer', icon = '' },
 	{ '<leader>e', group = 'Explore', icon = ' '},
 	{ '<leader>g', group = 'Git', icon = '' },
+	{ '<leader>l', group = 'LSP', icon = ''},
         { '<leader>s', group = 'Search', icon = '' },
 	{ '<leader>S', group = 'Session', icon = '' },
         { '<leader>f', group = 'Find', icon = '' },

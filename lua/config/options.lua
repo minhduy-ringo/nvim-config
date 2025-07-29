@@ -81,3 +81,9 @@ vim.o.expandtab = false
 vim.o.foldmethod = 'expr'
 vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 vim.o.foldlevel = 99
+
+-- Pop-up window
+vim.opt.winborder = 'rounded'
+
+-- No select autocomplete
+vim.opt.completeopt = 'noselect'
