@@ -10,7 +10,7 @@ ARG NVIM_VERSION
 
 # Update repositories and install build packages
 RUN apk update && \
-    apk add --no-cache "cmake>3.16" "gcc>4.9" build-base coreutils curl gettext-tiny-dev ninja-build git
+    apk add --no-cache "cmake>3.16" "gcc>4.9" build-base coreutils pkgconfig libtool autoconf automake curl gettext-tiny-dev samurai git
 
 # Build Neovim from source
 WORKDIR /tmp
@@ -18,25 +18,39 @@ RUN git clone --depth 1 --branch ${NVIM_VERSION} https://github.com/neovim/neovi
 RUN make CMAKE_BUILD_TYPE=RelWithDebInfo && \
     make install
 
+# --- Stage 2: Build Neovim plugins ---
+FROM neovim-build AS plugins-build
+
 # Set ENV variables for the user within this stage
 ENV USER="nvimuser"
 ENV HOME="/home/${USER}"
 ENV XDG_CONFIG_HOME="${HOME}/.config"
 ENV XDG_DATA_HOME="${HOME}/.local/share"
+ENV XDG_STATE_HOME="${HOME}/.local/state"
 
 RUN adduser -D -h ${HOME} ${USER} && \
     mkdir -p ${XDG_CONFIG_HOME}/nvim \
+	     ${XDG_STATE_HOME}/nvim \
 	     ${XDG_DATA_HOME}/nvim && \
     chown -R ${USER}:${USER} ${HOME}
 
+ARG LOCAL_CONFIG
+
 USER ${USER}
-ADD "https://api.github.com/repos/minhduy-ringo/nvim-config/commits?per_page=1" latest_commit
-RUN git clone --depth 1 https://github.com/minhduy-ringo/nvim-config.git ${XDG_CONFIG_HOME}/nvim
+COPY --chown=${USER}:${USER} . ${XDG_CONFIG_HOME}/nvim  
 
 # Build plugins
-RUN /usr/local/bin/nvim --headless "+Lazy! sync" "+TSUpdateSync" "+qa" || true{HOME}
+RUN /usr/local/bin/nvim --headless "+Lazy! sync" "+TSUpdateSync" "+qa"
 
-# Stage 2: Set up runtime env
+# Copy compile plugins data to /tmp and set permissions
+# this is need for the next stage
+RUN cp -r $XDG_CONFIG_HOME/nvim /tmp/nvim-config && \
+    cp -r $XDG_DATA_HOME/nvim /tmp/nvim-data && \
+    cp -r $XDG_STATE_HOME/nvim /tmp/nvim-state && \
+    chmod -R a+rwX /tmp/nvim-* && \
+    chmod -R a+rx /tmp/nvim-config/run-nvim.sh
+
+# Stage 3: Set up runtime env
 FROM alpine:${ALPINE_VERSION} AS neovim
 
 # Set image locale
@@ -45,28 +59,15 @@ ENV LANGUAGE=en_US:en
 
 # Install needed packages for Neovim
 RUN apk update && \
-    apk add --no-cache libstdc++ git fzf curl wget ripgrep nodejs npm unzip python3 lazygit
+    apk add --no-cache g++ libstdc++ git fzf curl wget ripgrep nodejs npm unzip python3 lazygit
 
-ENV USER="nvimuser"
-ENV HOME="/home/${USER}"
-ENV XDG_CONFIG_HOME="${HOME}/.config"
-ENV XDG_DATA_HOME="${HOME}/.local/share"
-ENV XDG_CACHE_HOME="${HOME}/.cache"
+# Set ENV variables for the user within this stage
+COPY --from=plugins-build /usr/local/bin/nvim /usr/local/bin/nvim
+COPY --from=plugins-build /usr/local/share/nvim /usr/local/share/nvim
+COPY --from=plugins-build /tmp/nvim-config /opt/nvim-config
+COPY --from=plugins-build /tmp/nvim-data /opt/nvim-data
+COPY --from=plugins-build /tmp/nvim-state /opt/nvim-state
 
-# Create the user and their XDG directories in the final image
-RUN adduser -D -h ${HOME} ${USER} && \
-    mkdir -p ${XDG_CONFIG_HOME}/nvim \
-             ${XDG_DATA_HOME}/nvim \
-             ${XDG_CACHE_HOME}/nvim && \
-    chown -R ${USER}:${USER} ${HOME}
+RUN mkdir -p /fakehome && chmod 0777 /fakehome
 
-COPY --from=neovim-build /usr/local/bin/nvim /usr/local/bin/nvim
-COPY --from=neovim-build /usr/local/share/nvim /usr/local/share/nvim
-COPY --from=neovim-build ${XDG_DATA_HOME}/nvim ${XDG_DATA_HOME}/nvim
-COPY --from=neovim-build ${XDG_CONFIG_HOME}/nvim ${XDG_CONFIG_HOME}/nvim
-
-USER ${USER}
-ENV PATH="/usr/local/bin:$PATH"
-ENV TERM=xterm-256color
-
-CMD ["nvim"]
+CMD ["sh", "/opt/nvim-config/run-nvim.sh"]
