@@ -116,6 +116,15 @@ return {
     },
   },
 
+  {
+    -- Git Blame
+    'FabijanZulj/blame.nvim',
+    lazy = true,
+    otps = {
+      blame_options = { '-w' },
+    }
+  }
+
   { -- Navigate between Vim and Tmux
     'christoomey/vim-tmux-navigator',
     lazy = false,
