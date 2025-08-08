@@ -116,6 +116,21 @@ return {
     },
   },
 
+  {
+    -- Git Blame
+    'FabijanZulj/blame.nvim',
+    lazy = false,
+    config = function ()
+      require('blame').setup {}
+    end,
+    opt = {
+      blame_option = { '-w' }
+    },
+    keys = {
+      { '<leader>gb', ':BlameToggle window<CR>', desc = 'Toggle git blame window' }
+    }
+  },
+
   { -- Navigate between Vim and Tmux
     'christoomey/vim-tmux-navigator',
     lazy = false,
