@@ -42,7 +42,7 @@ FROM alpine:${ALPINE_VERSION} AS neovim
 # Set image locale
 ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US:en
-ENV TERM=tmux-256color
+ENV TERM=screen-256color
 
 ENV XDG_CONFIG_HOME="/opt/.config"
 ENV XDG_DATA_HOME="/opt/.local/share"
@@ -51,7 +51,7 @@ ENV XDG_CACHE_HOME="/opt/.cache"
 
 # Install needed packages for Neovim
 RUN apk update && \
-    apk add --no-cache g++ libstdc++ bash git fzf curl wget ripgrep unzip lazygit
+    apk add --no-cache openjdk21 python3 nodejs npm g++ libstdc++ bash git fzf curl wget ripgrep unzip lazygit
 
 # Create a default neovim user for this image
 RUN addgroup -S neovim && adduser -S -G neovim neovimuser
