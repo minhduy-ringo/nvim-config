@@ -1,68 +1,69 @@
+
 # Docker file for base Neovim image
 
-ARG ALPINE_VERSION="latest"
+ARG DEBIAN_VERSION="bookworm-slim"
 ARG NVIM_VERSION="stable"
 
 # --- Stage 1: Build Neovim and plugins ---
-FROM alpine:${ALPINE_VERSION} AS neovim-build
+FROM debian:${DEBIAN_VERSION} AS neovim-build
 
-ARG NVIM_VERSION
+ARG NVIM_VERSION="stable"
 
 # Update repositories and install build packages
-RUN apk update && \
-    apk add --no-cache "cmake>3.16" "gcc>4.9" build-base coreutils pkgconfig libtool autoconf automake curl gettext-tiny-dev samurai git openjdk21 nodejs npm bash
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends build-essential cmake gcc coreutils pkg-config libtool autoconf automake curl git openjdk-17-jdk nodejs npm bash ninja-build unzip
 
 # Build Neovim from source
-WORKDIR /tmp
+WORKDIR /tmp/neovim
 RUN git clone --depth 1 --branch ${NVIM_VERSION} https://github.com/neovim/neovim .
 RUN make CMAKE_BUILD_TYPE=RelWithDebInfo && \
     make install
 
-# --- Stage 2: Build Neovim plugins ---
+# --- Stage 2: Neovim image ---
 FROM neovim-build AS plugins-build
 
-# Set ENV variables for the user within this stage
-ENV XDG_CONFIG_HOME="/root/.config"
-ENV XDG_DATA_HOME="/root/.local/share"
-ENV XDG_STATE_HOME="/root/.local/state"
+ARG HOST_UID=1000
+ARG HOST_GID=1000
 
-RUN mkdir -p ${XDG_CONFIG_HOME}/nvim \
-	     ${XDG_STATE_HOME}/nvim \
-	     ${XDG_DATA_HOME}/nvim \
-	     ${XDG_CACHE_HOME}/nvim
+RUN groupadd -g ${HOST_GID} hostuser && useradd -m -u ${HOST_UID} -g ${HOST_GID} hostuser
 
-COPY . ${XDG_CONFIG_HOME}/nvim
+USER hostuser
+WORKDIR /home/hostuser
 
-# Build plugins
+ENV XDG_CONFIG_HOME=/home/hostuser/.config
+ENV XDG_DATA_HOME=/home/hostuser/.local/share
+ENV XDG_STATE_HOME=/home/hostuser/.local/state
+
+COPY --chown=hostuser:hostuser . ${XDG_CONFIG_HOME}/nvim
+
 RUN nvim --headless "+Lazy! sync" "+TSUpdateSync" "+MasonToolsInstallSync" "+qa"
 
-# Stage 3: Set up runtime env
-FROM alpine:${ALPINE_VERSION} AS neovim
+# --- Stage 3: Final image ---
+FROM debian:${DEBIAN_VERSION}
+
+ARG HOST_UID=1000
+ARG HOST_GID=1000
+
+# Install needed packages for Neovim
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends openjdk-17-jdk python3 nodejs npm g++ bash git fzf curl wget ripgrep unzip && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Set image locale
 ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US:en
 ENV TERM=screen-256color
 
-ENV XDG_CONFIG_HOME="/opt/.config"
-ENV XDG_DATA_HOME="/opt/.local/share"
-ENV XDG_STATE_HOME="/opt/.local/state"
-ENV XDG_CACHE_HOME="/opt/.cache"
+RUN groupadd -g ${HOST_GID} hostuser && useradd -m -u ${HOST_UID} -g ${HOST_GID} hostuser
 
-# Install needed packages for Neovim
-RUN apk update && \
-    apk add --no-cache openjdk21 python3 nodejs npm g++ libstdc++ bash git fzf curl wget ripgrep unzip lazygit
+ENV XDG_CONFIG_HOME=/home/hostuser/.config
+ENV XDG_DATA_HOME=/home/hostuser/.local/share
+ENV XDG_CACHE_HOME=/home/hostuser/.cache
+ENV XDG_STATE_HOME=/home/hostuser/.local/state
 
-# Create a default neovim user for this image
-RUN addgroup -S neovim && adduser -S -G neovim neovimuser
+COPY --from=plugins-build --chown=hostuser:hostuser /usr/local/bin/nvim /usr/local/bin/nvim
+COPY --from=plugins-build --chown=hostuser:hostuser /usr/local/share/nvim /usr/local/share/nvim
+COPY --from=plugins-build /home/hostuser/.config/nvim /home/hostuser/.config/nvim
+COPY --from=plugins-build /home/hostuser/.local /home/hostuser/.local
 
-# Set ENV variables for the user within this stage
-COPY --from=plugins-build --chown=neovimuser:neovim /usr/local/bin/nvim /usr/local/bin/nvim
-COPY --from=plugins-build --chown=neovimuser:neovim /usr/local/share/nvim /usr/local/share/nvim
-COPY --from=plugins-build --chown=neovimuser:neovim /root/.config/ ${XDG_CONFIG_HOME}
-COPY --from=plugins-build --chown=neovimuser:neovim /root/.local/share ${XDG_DATA_HOME}
-COPY --from=plugins-build --chown=neovimuser:neovim /root/.local/state ${XDG_STATE_HOME}
-COPY --from=plugins-build --chown=neovimuser:neovim /root/.cache ${XDG_CACHE_HOME}
-
-RUN chmod -R 777 /opt
-USER neovimuser
+CMD ["nvim"]
