@@ -27,6 +27,9 @@ return {
 
       -- Session
       require('mini.sessions').setup()
+
+      -- Jump
+      require('mini.jump').setup()
     end,
     keys = {
       { '<leader>Sw', function()
@@ -121,7 +124,7 @@ return {
     'FabijanZulj/blame.nvim',
     lazy = false,
     config = function ()
-      require('blame').setup {}
+      require('blame').setup()
     end,
     opt = {
       blame_option = { '-w' }
