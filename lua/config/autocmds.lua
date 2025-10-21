@@ -19,6 +19,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "CursorHoldI", "FocusGai
 vim.api.nvim_create_autocmd({'BufRead', 'BufNewFile'}, {
   desc = 'Auto detect Jenkins file as groovy',
   group = vim.api.nvim_create_augroup('jenkins-groovy', { clear = true }),
+  pattern = "*Jenkinsfile*",
   callback = function()
     vim.cmd('set filetype=groovy')
   end,
