@@ -2,8 +2,8 @@
 -- Check plugins/Snacks.lua for more <leader> keys map
 
 local map = function(lhs, rhs, opts, mode)
-  mode = mode or 'n'
-  vim.keymap.set(mode, lhs, rhs, opts)
+    mode = mode or 'n'
+    vim.keymap.set(mode, lhs, rhs, opts)
 end
 
 -- Esc to espace mode

@@ -1,4 +1,3 @@
-
 # Docker file for base Neovim image
 
 ARG DEBIAN_VERSION="bookworm-slim"
