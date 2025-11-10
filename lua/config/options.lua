@@ -71,11 +71,12 @@ vim.o.scrolloff = 10
 -- See `:help 'confirm'`
 vim.o.confirm = true
 
--- Set tab to 2 spaces
+-- Set tab to 4 spaces
 vim.o.tabstop = 8
-vim.o.softtabstop = 2
-vim.o.shiftwidth = 2
-vim.o.expandtab = false
+vim.o.softtabstop = 0
+vim.o.shiftwidth = 4
+vim.o.expandtab = true
+vim.o.smarttab = true
 
 -- Fold method
 vim.o.foldmethod = 'expr'
