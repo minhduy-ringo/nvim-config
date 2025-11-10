@@ -8,16 +8,6 @@ return {
   opts = {
     bigfile = { enabled = true },
     bufdelete = { enabled = true },
-    dashboard = {
-      sections = {
-	{ section = "header" },
-	{ icon = " ", title = "Keymaps", section = "keys", indent = 2, padding = 1 },
-	{ icon = " ", title = "Recent Files", section = "recent_files", indent = 2, padding = 1 },
-	{ icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
-	{ section = "startup" },
-      },
-    },
-    scope = { enabled = true },
     input = { enabled = true },
     indent = {
       enabled = true,
@@ -26,11 +16,7 @@ return {
 	enabled = false
       }
     },
-    lazygit = { enabled = true },
-    notifier = {
-      enabled = true,
-      timeout = 3000,
-    },
+    notifier = { enabled = true },
     picker = { enabled = true },
     toggle = { enabled = true },
     words = { enabled = true },
@@ -51,9 +37,9 @@ return {
     { "<leader>fp", function() Snacks.picker.projects() end, desc = "Projects" },
     { "<leader>fr", function() Snacks.picker.recent() end, desc = "Recent" },
     -- Git
-    { "<leader>gg", function() Snacks.lazygit() end, desc = "LazyGit" },
     { "<leader>gB", function() Snacks.gitbrowse() end, desc = "Git Browse", mode = { "n", "v" } },
     { "<leader>gd", function() Snacks.picker.git_diff() end, desc = "Git Diff (Hunks)" },
+    { "<leader>gs", function() Snacks.picker.git_status() end, desc = "Git Status" },
     -- Grep
     { "<leader>sb", function() Snacks.picker.lines() end, desc = "Buffer Lines" },
     { "<leader>sB", function() Snacks.picker.grep_buffers() end, desc = "Grep Open Buffers" },
@@ -92,8 +78,6 @@ return {
     -- Other
     { "<leader>n",  function() Snacks.notifier.show_history() end, desc = "Notification History" },
     { "<leader>un", function() Snacks.notifier.hide() end, desc = "Dismiss All Notifications" },
-    { "<C-/>",      function() Snacks.terminal().open(nil, { win = { position = "right" }}) end, desc = "Toggle Terminal" },
-    { "<C-_>",      function() Snacks.terminal() end, desc = "which_key_ignore" },
     { "]]",         function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference", mode = { "n", "t" } },
     { "[[",         function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference", mode = { "n", "t" } },
   },
