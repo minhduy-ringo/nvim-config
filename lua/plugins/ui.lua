@@ -3,8 +3,19 @@ return {
     -- This provide a tab-like UI look for buffer
     {
         'akinsho/bufferline.nvim',
+        lazy = false,
         version = '*',
-        depedencies = { 'nvim-tree/nvim-web-devicons', 'catppuccin' },
+        depedencies = { 'nvim-tree/nvim-web-devicons' },
+        opts = {
+            options = {
+                themable = true,
+                separator_style = "slant",
+            }
+        },
+        keys = {
+            { '<leader>bp', ':BufferLinePick<CR>', desc='Pick buffer' },
+            { '<leader>bP', ':BufferLineTogglePin<CR>', desc='Pin cur buffer' },
+        }
     },
 
     -- Lua line

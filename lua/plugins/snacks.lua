@@ -4,7 +4,7 @@ return {
     priority = 1000,
     dependencise = 'nvim-tree/nvim-web-devicons',
     lazy = false,
-    ---@type snacks.config
+    ---@type snacks.Config
     opts = {
         bigfile = { enabled = true },
         bufdelete = { enabled = true },
@@ -16,6 +16,7 @@ return {
                 enabled = false
             }
         },
+        scope = { enabled = true },
         notifier = { enabled = true },
         picker = { enabled = true },
         toggle = { enabled = true },
